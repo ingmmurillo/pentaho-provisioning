@@ -1,0 +1,42 @@
+---
+- name: revisar si existe JDK descargado
+  stat: path="{{oracle_jdk_download_dir}}/{{oracle_jdk_package}}" get_checksum=yes
+  register: jdk_descargado
+  sudo: no
+  delegate_to: 127.0.0.1
+
+- name: download Oracle JDK7 to host
+  local_action: >
+    command wget -O "{{oracle_jdk_download_dir}}/{{oracle_jdk_package}}" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/{{oracle_jdk_package_subdir}}/{{oracle_jdk_package}}
+  when: "not jdk_descargado.stat.exists or jdk_descargado.stat.checksum != 'c4deb058f674ab732b36a101147add089cf7f134'"
+  tags: download
+  sudo: no
+
+- name: "{{oracle_jdk_installation_dir}} must exist"
+  file:
+    path="{{oracle_jdk_installation_dir}}"
+    state="directory"
+
+- name: unpacks Jdk7
+  unarchive:
+    src="{{oracle_jdk_download_dir}}/{{oracle_jdk_package}}"
+    dest="{{oracle_jdk_installation_dir}}"
+    creates="{{oracle_jdk_installation_dir}}/jdk{{oracle_jdk_version}}/bin/java"
+    force=no
+  tags: unpack
+
+- name: setup JAVA_HOME
+  lineinfile:
+    dest=~/.bashrc
+    line="export JAVA_HOME={{oracle_jdk_installation_dir}}/jdk{{oracle_jdk_version}}"
+    state=present
+    insertafter=EOF
+    create=true
+
+- name: append JAVA_HOME to PATH
+  lineinfile:
+    dest=~/.bashrc
+    line="export PATH=$JAVA_HOME/bin:$PATH"
+    state=present
+    insertafter=EOF
+    create=true

@@ -1,0 +1,9 @@
+---
+- name: Setting environment variables
+  lineinfile:
+    dest: /etc/profile
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.variable }}'
+  with_items:
+    - { regexp: '^export JAVA_HOME', variable: "export JAVA_HOME='{{ java_home }}'"}
+    - { regexp: '^export PATH=\$JAVA_HOME', variable: 'export PATH=$JAVA_HOME/bin:$PATH'}

@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Alexader Ramos Jardim
+  description: 
+  license: BSD
+  min_ansible_version: 1.6
+  platforms:
+  - name: GenericLinux
+    versions:
+    - all
+    - any
+  categories:
+  - system
+dependencies: []
