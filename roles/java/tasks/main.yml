@@ -1,5 +1,5 @@
 ---
-- name: Setting environment variables
+- name: setting environment variables
   lineinfile:
     dest: /etc/profile
     regexp: '{{ item.regexp }}'

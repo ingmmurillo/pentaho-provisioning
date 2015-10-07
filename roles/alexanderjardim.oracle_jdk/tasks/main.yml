@@ -1,34 +1,40 @@
 ---
-- name: revisar si existe JDK descargado
-  stat: path="{{oracle_jdk_download_dir}}/{{oracle_jdk_package}}" get_checksum=yes
-  register: jdk_descargado
+- name: find if installation directory exists
+  stat: path={{ oracle_jdk_installation_dir }}
+  register: java_dir_exists
+
+- name: verify if JDK was downloaded
+  stat: path="{{ oracle_jdk_download_dir }}/{{ oracle_jdk_package }}" get_checksum=yes
+  register: jdk_downloaded
   sudo: no
   delegate_to: 127.0.0.1
 
 - name: download Oracle JDK7 to host
   local_action: >
-    command wget -O "{{oracle_jdk_download_dir}}/{{oracle_jdk_package}}" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/{{oracle_jdk_package_subdir}}/{{oracle_jdk_package}}
-  when: "not jdk_descargado.stat.exists or jdk_descargado.stat.checksum != 'c4deb058f674ab732b36a101147add089cf7f134'"
+    command wget -O "{{ oracle_jdk_download_dir }}/{{ oracle_jdk_package }}" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/{{ oracle_jdk_package_subdir }}/{{ oracle_jdk_package }}
+  when: "not jdk_downloaded.stat.exists or jdk_downloaded.stat.checksum != '19470e2ed867d9453e1bb5e1d6adca87cc23f55e'"
   tags: download
   sudo: no
 
-- name: "{{oracle_jdk_installation_dir}} must exist"
+- name: "{{ oracle_jdk_installation_dir }} must exist"
   file:
-    path="{{oracle_jdk_installation_dir}}"
+    path="{{ oracle_jdk_installation_dir }}"
     state="directory"
+  when: "not java_dir_exists.stat.exists"
 
 - name: unpacks Jdk7
   unarchive:
-    src="{{oracle_jdk_download_dir}}/{{oracle_jdk_package}}"
-    dest="{{oracle_jdk_installation_dir}}"
-    creates="{{oracle_jdk_installation_dir}}/jdk{{oracle_jdk_version}}/bin/java"
+    src="{{ oracle_jdk_download_dir }}/{{ oracle_jdk_package }}"
+    dest="{{ oracle_jdk_installation_dir }}"
+    creates="{{ oracle_jdk_installation_dir }}/jdk{{ oracle_jdk_version }}/bin/java"
     force=no
+  when: "not java_dir_exists.stat.exists"
   tags: unpack
 
 - name: setup JAVA_HOME
   lineinfile:
     dest=~/.bashrc
-    line="export JAVA_HOME={{oracle_jdk_installation_dir}}/jdk{{oracle_jdk_version}}"
+    line="export JAVA_HOME={{ oracle_jdk_installation_dir }}/jdk{{ oracle_jdk_version }}"
     state=present
     insertafter=EOF
     create=true

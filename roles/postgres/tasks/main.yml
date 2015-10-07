@@ -1,0 +1,36 @@
+---
+- name: find package pgdg-94-centos.repo
+  stat: path=/etc/yum.repos.d/pgdg-94-centos.repo
+  register: pg_repo_file
+
+- name: add PostgreSQL v9.4 repository for the CentOS version
+  yum: name=http://yum.postgresql.org/9.4/redhat/rhel-{{ ansible_distribution_major_version }}-x86_64/pgdg-centos94-9.4-1.noarch.rpm
+  when: not pg_repo_file.stat.exists
+
+- name: install PostgreSQL v9.4
+  yum: name=postgresql94-server
+
+- name: find pg_hba.conf file
+  stat: path=/var/lib/pgsql/9.4/data/pg_hba.conf
+  register: pg_hba_file
+
+- name: init PostgreSQL
+  command: /usr/pgsql-9.4/bin/postgresql94-setup initdb
+  when: not pg_hba_file.stat.exists
+
+- name: copy PostgreSQL configuration files
+  copy:
+    src: '{{ item }}'
+    dest: /var/lib/pgsql/9.4/data/
+    owner: postgres
+    group: postgres
+    mode: 0600
+  with_items:
+    - pg_hba.conf
+    - postgresql.conf
+  notify: restart PostgreSQL Service
+
+- meta: flush_handlers
+
+- name: activate PostgreSQL service
+  service: name=postgresql-9.4 enabled=yes state=started

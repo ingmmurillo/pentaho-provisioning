@@ -1,5 +1,4 @@
 ---
-
 - hosts: all
   roles:
     - { role: oracle_jdk }
