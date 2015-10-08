@@ -1,3 +1,4 @@
 .vagrant/
 charms/
 shared/
+.DS_Store

@@ -1,0 +1,5 @@
+---
+bi_server_filename: biserver-ce-5.4.0.1-130.zip
+bi_server_url: 'http://ufpr.dl.sourceforge.net/project/pentaho/Business%20Intelligence%20Server/5.4/{{ bi_server_filename }}'
+bi_server_sha1_checksum: bc15f904a8bab1c776c8c26bf93ef775b79cb1d7
+bi_server_sha256_checksum: 14b7f6a1265c4918f21314289d18b17faf82ca87aa6ed3b01643aaf02e479e8c

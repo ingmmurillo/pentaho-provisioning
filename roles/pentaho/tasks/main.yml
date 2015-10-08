@@ -1,0 +1,47 @@
+---
+- name: install unzip package
+  yum: name=unzip
+
+- name: install python-psycopg2 package
+  yum: name=python-psycopg2
+
+- name: create user pentaho
+  user: name=pentaho state=present
+
+- name: create Pentaho Home directory
+  file: path=/opt/pentaho state=directory owner=pentaho group=pentaho
+
+- name: verify if Pentaho BI Server was downloaded
+  stat: path="/tmp/{{ bi_server_filename }}" get_checksum=yes
+  register: bi_server_downloaded
+
+- name: download Pentaho BI Server
+  when: "not bi_server_downloaded.stat.exists or bi_server_downloaded.stat.checksum != '{{ bi_server_sha1_checksum }}'"
+  get_url:
+    url: '{{ bi_server_url }}'
+    dest: '/tmp/{{ bi_server_filename }}'
+    timeout: 60
+    sha256sum: '{{ bi_server_sha256_checksum }}'
+
+- name: unzip Pentaho BI Server
+  unarchive:
+    copy: no
+    src: '/tmp/{{ bi_server_filename }}'
+    dest: /opt/pentaho
+    creates: /opt/pentaho/biserver-ce/start-pentaho.sh
+
+- name: set group permissions to /opt/pentaho
+  file: path=/opt/pentaho state=directory owner=pentaho group=pentaho recurse=yes
+
+- name: copy pentaho.service file
+  copy:
+    src: service/pentaho.service
+    dest: /etc/systemd/system/
+    owner: root
+    group: root
+    mode: 0644
+
+- name: active pentaho daemon
+  service: name=pentaho enabled=yes state=started
+
+- meta: flush_handlers

@@ -4,3 +4,4 @@
   roles:
     - { role: java, sudo: yes }
     - { role: postgres, sudo: yes }
+    - { role: pentaho, sudo: yes }

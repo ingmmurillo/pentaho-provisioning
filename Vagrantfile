@@ -9,8 +9,14 @@ Vagrant.configure(2) do |config|
   config.vm.network :forwarded_port, guest: 8080, host: 8888
   config.cache.scope = :box if Vagrant.has_plugin?("vagrant-cachier")
 
+  #Hardware Specifications
+  config.vm.provider "virtualbox" do |v|
+    v.name = "Pentaho54CentOS7"
+    v.memory = 2048
+    v.cpus = 2
+  end
   #Sync Folder
-  config.vm.synced_folder "shared/", "/home/vagrant/", create: false,
+  config.vm.synced_folder "shared/", "/home/vagrant/sync", create: false,
     owner: "vagrant", group: "vagrant"
 
   #Code to provision the box

@@ -1,0 +1,14 @@
+[Unit]
+Description=Pentaho BI Server
+After=network.target
+
+[Service]
+Type=forking
+User=pentaho
+PIDFile=/opt/pentaho/biserver-ce/pentaho.pid
+Environment="CATALINA_PID=/opt/pentaho/biserver-ce/pentaho.pid" "JAVA_HOME=/opt/jdk1.7.0_79"
+ExecStart=/opt/pentaho/biserver-ce/start-pentaho.sh
+ExecStop=/opt/pentaho/biserver-ce/stop-pentaho.sh
+
+[Install]
+WantedBy=multi-user.target

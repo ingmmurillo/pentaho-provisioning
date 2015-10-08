@@ -1,4 +1,4 @@
 ---
-version_jdk: 1.8.0_60
+version_jdk: 1.7.0_79
 installation_path: /opt
 java_home: '{{ installation_path }}/jdk{{ version_jdk }}'
