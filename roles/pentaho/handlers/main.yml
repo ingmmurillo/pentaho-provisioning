@@ -1,5 +1,5 @@
 ---
-- name: Restart Pentaho BI Server
+- name: restart pentaho bi server
   file: path=/opt/pentaho/biserver-ce/tomcat/conf/Catalina/ state=absent
   notify: restart pentaho daemon
 

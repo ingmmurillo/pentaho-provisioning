@@ -16,8 +16,8 @@ Vagrant.configure(2) do |config|
     v.cpus = 2
   end
   #Sync Folder
-  config.vm.synced_folder "shared/", "/home/vagrant/sync", create: false,
-    owner: "vagrant", group: "vagrant"
+  #config.vm.synced_folder "shared/", "/home/vagrant/sync", create: false,
+  #  owner: "vagrant", group: "vagrant"
 
   #Code to provision the box
   config.vm.provision "ansible" do |ansible|

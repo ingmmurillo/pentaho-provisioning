@@ -33,6 +33,71 @@
 - name: set group permissions to /opt/pentaho
   file: path=/opt/pentaho state=directory owner=pentaho group=pentaho recurse=yes
 
+- name: copy postgresql scripts for hibernate, quartz and jackrabbit databases
+  copy:
+    src: '{{ item.src }}'
+    dest: '/opt/pentaho/{{ item.dest }}'
+    owner: pentaho
+    group: pentaho
+    mode: 0644
+  notify: restart pentaho bi server
+  with_items:
+    - { src: 'scripts/create_quartz_postgresql.sql', dest: 'biserver-ce/data/postgresql/' }
+    - { src: 'scripts/create_repository_postgresql.sql', dest: 'biserver-ce/data/postgresql/' }
+    - { src: 'scripts/create_jcr_postgresql.sql', dest: 'biserver-ce/data/postgresql/' }
+
+- name: list postgresql databases
+  command: /usr/bin/psql -U postgres -p 5454 -l
+  register: databases_list
+  changed_when: no
+
+- name: create hibernate, quartz and jackrabbit databases
+  command: /usr/bin/psql -U postgres -p 5454 -f /opt/pentaho/biserver-ce/data/postgresql/{{ item.script }}
+  when: "'{{ item.bdd }}' not in databases_list.stdout"
+  with_items:
+    - { script: 'create_repository_postgresql.sql', bdd: 'hibernate' }
+    - { script: 'create_quartz_postgresql.sql', bdd: 'quartz' }
+    - { script: 'create_jcr_postgresql.sql', bdd: 'jcr' }
+
+- name: delete postgresql jdbc default driver
+  file: path=/opt/pentaho/biserver-ce/tomcat/lib/postgresql-9.3-1102-jdbc4.jar state=absent
+
+- name: copy postgresql-9.4 jdbc driver
+  copy:
+    src: jdbc/postgresql-9.4-1201.jdbc4.jar
+    dest: /opt/pentaho/biserver-ce/tomcat/lib/
+    owner: pentaho
+    group: pentaho
+    mode: 0644
+
+- name: copy tomcat context file and deployment descriptor
+  copy:
+    src: '{{ item.src }}'
+    dest: '/opt/pentaho/{{ item.dest }}'
+    owner: pentaho
+    group: pentaho
+    mode: 0644
+  notify: restart pentaho bi server
+  with_items:
+    - { src: 'configuration/context.xml', dest: 'biserver-ce/tomcat/webapps/pentaho/META-INF/' }
+    - { src: 'configuration/web.xml', dest: 'biserver-ce/tomcat/webapps/pentaho/WEB-INF/' }
+
+- name: copy bi-server configuration files
+  copy:
+    src: '{{ item.src }}'
+    dest: '/opt/pentaho/{{ item.dest }}'
+    owner: pentaho
+    group: pentaho
+    mode: 0644
+  notify: restart pentaho bi server
+  with_items:
+    - { src: 'configuration/hibernate-settings.xml', dest: 'biserver-ce/pentaho-solutions/system/hibernate/' }
+    - { src: 'configuration/postgresql.hibernate.cfg.xml', dest: 'biserver-ce/pentaho-solutions/system/hibernate/' }
+    - { src: 'configuration/applicationContext-spring-security-hibernate.properties', dest: 'biserver-ce/pentaho-solutions/system/' }
+    - { src: 'configuration/repository.xml', dest: 'biserver-ce/pentaho-solutions/system/jackrabbit/' }
+    - { src: 'configuration/quartz.properties', dest: 'biserver-ce/pentaho-solutions/system/quartz/' }
+
+
 - name: copy pentaho.service file
   copy:
     src: service/pentaho.service
