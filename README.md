@@ -1,7 +1,7 @@
-# Provisioning Pentaho BI Server CE v5.4 and PostgreSQL v9.4 on CentOS v7
-The following code automates the procedure to install and configure base software ([**Java 7**](http://www.oracle.com/technetwork/java/javase/downloads/index.html)),  [**Pentaho BI Server v5.4**](http://sourceforge.net/projects/pentaho/files/Business%20Intelligence%20Server/5.4/) and [**PostgreSQL**](http://www.postgresql.org/download/) on an operating system CentOS v7.
+# Provisioning Pentaho BI Server CE v5.4 and PostgreSQL v9.4 on CentOS v7.1
+The following code automates the procedure to install and configure base software ([**Java 7**](http://www.oracle.com/technetwork/java/javase/downloads/index.html)),  [**Pentaho BI Server v5.4**](http://sourceforge.net/projects/pentaho/files/Business%20Intelligence%20Server/5.4/) and [**PostgreSQL**](http://www.postgresql.org/download/) on an operating system CentOS v7.1
 
-This **IAC** (Infrastructure as Code) allows you to have *Pentaho BI Server v5.4* configured on *PostgreSQL* repositories: (**hibernate**, **quartz**, **jackrabbit**) with only one command.
+This **IAC** (Infrastructure as Code) allows you to have **Pentaho BI Server v5.4** configured on **PostgreSQL** repositories: (**hibernate**, **quartz**, **jackrabbit**) with only one command.
 
 Before using this code, make sure you have installed the following:
 * [**Ansible**](http://docs.ansible.com/ansible/intro_installation.html)
@@ -21,3 +21,10 @@ http://localhost:8888/pentaho/
 * Just the first time you run the command, it will take some minutes
 * [**Ansible**](http://www.ansible.com/) and [**Vagrant**](http://www.vagrantup.com/) runs well on Linux distributions and OS X. To run those on Windows is tricky, but not impossible!
 * This code automates all the procedures mentioned in my [**blog post**](https://translate.google.com/translate?hl=en&sl=auto&tl=en&u=http%3A%2F%2Fingmmurillo-dwh-bi.blogspot.com%2F2014%2F10%2Fconfiguracion-de-pentaho-bi-server-52.html)
+
+**Useful Information:**
+
+| Service           | Port | Forwarded Port  | Unix User | Command                                        |
+| ----------------- | ---- | --------------- | --------- | ---------------------------------------------- |
+| Pentaho BI Server | 8080 | 8888            | pentaho   | sudo service pentaho (start, stop or restart)  |
+| PostgreSQL        | 5454 | 5454            | postgres  | psql -p 5454                                   |

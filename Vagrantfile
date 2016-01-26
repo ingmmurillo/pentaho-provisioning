@@ -7,6 +7,7 @@ Vagrant.configure(2) do |config|
   #Vagrant Box https://atlas.hashicorp.com/boxes/search
   config.vm.box = "centos/7"
   config.vm.network :forwarded_port, guest: 8080, host: 8888
+  config.vm.network :forwarded_port, guest: 5454, host: 5454
   config.cache.scope = :box if Vagrant.has_plugin?("vagrant-cachier")
 
   #Hardware Specifications
