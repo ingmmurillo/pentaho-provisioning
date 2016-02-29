@@ -7,6 +7,7 @@ Before using this code, make sure you have installed the following:
 * [**Ansible**](http://docs.ansible.com/ansible/intro_installation.html)
 * [**Vagrant**](https://www.vagrantup.com/docs/installation/)
 * [**VirtualBox**](https://www.virtualbox.org/)
+* [**Wget**](https://www.gnu.org/software/wget/)
 
 To run the provisioning code, open a terminal console and run:
 ```sh-session
