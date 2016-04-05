@@ -1,7 +1,7 @@
 # Provisioning Pentaho BI Server CE v5.4 and PostgreSQL v9.4 on CentOS v7.1
 The following code automates the procedure to install and configure base software ([**Java 7**](http://www.oracle.com/technetwork/java/javase/downloads/index.html)),  [**Pentaho BI Server v5.4**](http://sourceforge.net/projects/pentaho/files/Business%20Intelligence%20Server/5.4/) and [**PostgreSQL**](http://www.postgresql.org/download/) on an operating system CentOS v7.1
 
-This **IAC** (Infrastructure as Code) allows you to have **Pentaho BI Server v5.4** configured on **PostgreSQL** repositories: (**hibernate**, **quartz**, **jackrabbit**) with only one command.
+This **[IAC](http://martinfowler.com/bliki/InfrastructureAsCode.html)** (Infrastructure as Code) allows you to have **Pentaho BI Server v5.4** configured on **PostgreSQL** repositories: (**hibernate**, **quartz**, **jackrabbit**) with only one command.
 
 Before using this code, make sure you have installed the following:
 * [**Ansible**](http://docs.ansible.com/ansible/intro_installation.html)
