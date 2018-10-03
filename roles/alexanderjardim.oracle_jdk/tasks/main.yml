@@ -6,7 +6,6 @@
 - name: verify if JDK was downloaded
   stat: path="{{ oracle_jdk_download_dir }}/{{ oracle_jdk_package }}" get_checksum=yes
   register: jdk_downloaded
-  sudo: no
   delegate_to: 127.0.0.1
 
 - name: download Oracle JDK7 to host
@@ -14,7 +13,6 @@
     command wget -O "{{ oracle_jdk_download_dir }}/{{ oracle_jdk_package }}" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/{{ oracle_jdk_package_subdir }}/{{ oracle_jdk_package }}
   when: "not jdk_downloaded.stat.exists or jdk_downloaded.stat.checksum != 'c4deb058f674ab732b36a101147add089cf7f134'"
   tags: download
-  sudo: no
 
 - name: "{{ oracle_jdk_installation_dir }} must exist"
   file:

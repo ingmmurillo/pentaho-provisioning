@@ -11,6 +11,7 @@
   yum: name=postgresql94-server
 
 - name: find pg_hba.conf file
+  become: yes
   stat: path=/var/lib/pgsql/9.4/data/pg_hba.conf
   register: pg_hba_file
 
@@ -19,6 +20,7 @@
   when: not pg_hba_file.stat.exists
 
 - name: copy PostgreSQL configuration files
+  become: yes
   copy:
     src: '{{ item }}'
     dest: /var/lib/pgsql/9.4/data/

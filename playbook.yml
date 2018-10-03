@@ -1,7 +1,6 @@
 ---
 - hosts: all
-
   roles:
-    - { role: java, sudo: yes }
-    - { role: postgres, sudo: yes }
-    - { role: pentaho, sudo: yes }
+    - { role: java }
+    - { role: postgres }
+    - { role: pentaho }
